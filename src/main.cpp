@@ -21,39 +21,92 @@ class $modify(CompressSetGroupIDLayer, SetGroupIDLayer) {
 		auto objArr = self->m_targetObjects;
 
 		if (objArr && objArr->count() > 0) {
-			// Init z's ordered set
-			std::set<int>posOrderSet;
-			std::set<int>negOrderSet;
-			for (auto objInArr : CCArrayExt<GameObject*>(objArr)) {
-				if (objInArr->m_zOrder > 0)
-					posOrderSet.insert(objInArr->m_zOrder);
-				else if (objInArr->m_zOrder < 0)
-					negOrderSet.insert(objInArr->m_zOrder);
-			}
+			if (!Mod::get()->getSettingValue<bool>("consider-z-layer")) {
+
+				// Init z's ordered set
+				std::set<int>posOrderSet;
+				std::set<int>negOrderSet;
+				for (auto objInArr : CCArrayExt<GameObject*>(objArr)) {
+					if (objInArr->m_zOrder > 0)
+						posOrderSet.insert(objInArr->m_zOrder);
+					else if (objInArr->m_zOrder < 0)
+						negOrderSet.insert(objInArr->m_zOrder);
+				}
 
 
-			// Mapping z's
-			std::unordered_map<int, int> orderRemap;
-			int posI = 1;
-			for (int i : posOrderSet) {
-				if (!orderRemap.contains(i)) {
-					orderRemap[i] = posI;
-					posI++;
+				// Mapping z's
+				std::unordered_map<int, int> orderRemap;
+				int posI = 1;
+				for (int i : posOrderSet) {
+					if (!orderRemap.contains(i)) {
+						orderRemap[i] = posI;
+						posI++;
+					}
+				}
+
+				int negI = -1;
+				for (auto it = negOrderSet.rbegin(); it != negOrderSet.rend(); ++it) {
+					if (!orderRemap.contains(*it)) {
+						orderRemap[*it] = negI;
+						negI--;
+					}
+				}
+
+
+				// Inserting new mapped z's to Objects
+				for (auto objInArr : CCArrayExt<GameObject*>(objArr)) {
+					objInArr->m_zOrder = orderRemap[objInArr->m_zOrder];
 				}
 			}
-
-			int negI = -1;
-			for (auto it = negOrderSet.rbegin(); it != negOrderSet.rend(); ++it) {
-				if (!orderRemap.contains(*it)) {
-					orderRemap[*it] = negI;
-					negI--;
+			else {
+				std::unordered_map<ZLayer, CCArray*> objectsMap;
+				for (auto objInArr : CCArrayExt<GameObject*>(objArr)) {
+					auto zLayer = objInArr->m_zLayer;
+					if (!objectsMap.contains(zLayer)) {
+						CCArray* zLayerObjectsArr = CCArray::create();
+						objectsMap[zLayer] = zLayerObjectsArr;
+					}
+					objectsMap[zLayer]->addObject(objInArr);
 				}
-			}
+
+				for (auto mapPair : objectsMap) {
+					auto zLayerObjectsArr = mapPair.second;
+
+					// Init z's ordered set
+					std::set<int>posOrderSet;
+					std::set<int>negOrderSet;
+					for (auto objInArr : CCArrayExt<GameObject*>(zLayerObjectsArr)) {
+						if (objInArr->m_zOrder > 0)
+							posOrderSet.insert(objInArr->m_zOrder);
+						else if (objInArr->m_zOrder < 0)
+							negOrderSet.insert(objInArr->m_zOrder);
+					}
 
 
-			// Inserting new mapped z's to Objects
-			for (auto objInArr : CCArrayExt<GameObject*>(objArr)) {
-				objInArr->m_zOrder = orderRemap[objInArr->m_zOrder];
+					// Mapping z's
+					std::unordered_map<int, int> orderRemap;
+					int posI = 1;
+					for (int i : posOrderSet) {
+						if (!orderRemap.contains(i)) {
+							orderRemap[i] = posI;
+							posI++;
+						}
+					}
+
+					int negI = -1;
+					for (auto it = negOrderSet.rbegin(); it != negOrderSet.rend(); ++it) {
+						if (!orderRemap.contains(*it)) {
+							orderRemap[*it] = negI;
+							negI--;
+						}
+					}
+
+
+					// Inserting new mapped z's to Objects
+					for (auto objInArr : CCArrayExt<GameObject*>(zLayerObjectsArr)) {
+						objInArr->m_zOrder = orderRemap[objInArr->m_zOrder];
+					}
+				}
 			}
 		}
 	}

@@ -10,5 +10,13 @@
 	"name": "Compress Z-Order",
 	"version": "v1.0.0",
 	"developer": "Taswert",
-	"description": "Compresses Z Order and prevents gaps between"
+	"description": "Compresses Z Order and prevents gaps between",
+	"settings": {
+		"consider-z-layer": {
+			"type": "bool",
+			"name": "Consider Z-Layer",
+			"description": "Compressing z-orders independently if corresponding objects are on different z-layers",
+			"default": true
+		}
+	}
 }
