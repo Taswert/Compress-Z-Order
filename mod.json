@@ -8,7 +8,7 @@
 	},
 	"id": "taswert.compress_z-order",
 	"name": "Compress Z-Order",
-	"version": "v1.0.1",
+	"version": "v1.0.2",
 	"developer": "Taswert",
 	"description": "Compresses Z Order and prevents gaps between",
 	"settings": {
@@ -19,6 +19,12 @@
 			"default": true
 		}
 	},
+	"tags": [
+		"editor",
+		"offline",
+		"interface",
+		"utility"
+	],
 	"dependencies": {
 		"geode.node-ids": ">=1.21.1"
 	}
