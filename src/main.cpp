@@ -27,10 +27,16 @@ class $modify(CompressSetGroupIDLayer, SetGroupIDLayer) {
 				std::set<int>posOrderSet;
 				std::set<int>negOrderSet;
 				for (auto objInArr : CCArrayExt<GameObject*>(objArr)) {
-					if (objInArr->m_zOrder > 0)
-						posOrderSet.insert(objInArr->m_zOrder);
-					else if (objInArr->m_zOrder < 0)
-						negOrderSet.insert(objInArr->m_zOrder);
+					auto zOrder = objInArr->m_zOrder;
+					if (zOrder == 0) {
+						objInArr->m_zOrder = objInArr->m_defaultZOrder;
+						zOrder = objInArr->m_defaultZOrder;
+					}
+
+					if (zOrder > 0)
+						posOrderSet.insert(zOrder);
+					else if (zOrder < 0)
+						negOrderSet.insert(zOrder);
 				}
 
 
@@ -76,10 +82,16 @@ class $modify(CompressSetGroupIDLayer, SetGroupIDLayer) {
 					std::set<int>posOrderSet;
 					std::set<int>negOrderSet;
 					for (auto objInArr : CCArrayExt<GameObject*>(zLayerObjectsArr)) {
-						if (objInArr->m_zOrder > 0)
-							posOrderSet.insert(objInArr->m_zOrder);
-						else if (objInArr->m_zOrder < 0)
-							negOrderSet.insert(objInArr->m_zOrder);
+						auto zOrder = objInArr->m_zOrder;
+						if (zOrder == 0) {
+							objInArr->m_zOrder = objInArr->m_defaultZOrder;
+							zOrder = objInArr->m_defaultZOrder;
+						}
+
+						if (zOrder > 0)
+							posOrderSet.insert(zOrder);
+						else if (zOrder < 0)
+							negOrderSet.insert(zOrder);
 					}
 
 

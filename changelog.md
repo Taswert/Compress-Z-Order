@@ -1,3 +1,6 @@
+# v1.0.3
+- Fixed default zOrder not being compressed
+
 # v1.0.2
 - Added Tags in mod.json (OOOPS)
 - Added changelog.md
