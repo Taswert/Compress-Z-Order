@@ -8,7 +8,7 @@
 	},
 	"id": "taswert.compress_z-order",
 	"name": "Compress Z-Order",
-	"version": "v1.0.0",
+	"version": "v1.0.1",
 	"developer": "Taswert",
 	"description": "Compresses Z Order and prevents gaps between",
 	"settings": {
@@ -18,5 +18,8 @@
 			"description": "Compressing z-orders independently if corresponding objects are on different z-layers",
 			"default": true
 		}
+	},
+	"dependencies": {
+		"geode.node-ids": ">=1.21.1"
 	}
 }
